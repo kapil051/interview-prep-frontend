@@ -4,7 +4,7 @@ function DashboardPage() {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 font-inter">
+    <div className="min-h-screen flex items-center justify-center font-inter">
       <div className="text-center space-y-6">
         <p className="text-lg text-gray-500">
           🚧 Site is under development. More features coming soon!

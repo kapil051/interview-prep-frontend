@@ -54,23 +54,19 @@
   }
 }
 
-body {
+* {
   margin: 0;
-  font-family: 'Inter', sans-serif;
-  background-color: #f9fafb;
-  color: #111827;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-#root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
+body {
+  font-family: 'Inter', sans-serif;
+  background: linear-gradient(135deg, #ede9fe 0%, #faf5ff 50%, #f5f3ff 100%);
+  color: #111827;
+  width: 100%;
+  overflow-x: hidden;
+  min-height: 100vh;
 }
 
 h1,

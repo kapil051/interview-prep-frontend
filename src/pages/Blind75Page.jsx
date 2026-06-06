@@ -101,7 +101,7 @@ function Blind75Page() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 font-inter">
+      <div className="min-h-screen flex items-center justify-center font-inter">
         <div className="w-8 h-8 border-4 border-primary-200 border-t-primary-600 rounded-full animate-spin" />
       </div>
     );
@@ -109,14 +109,14 @@ function Blind75Page() {
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 font-inter">
+      <div className="min-h-screen flex items-center justify-center font-inter">
         <p className="text-sm text-red-500">{error}</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 font-inter px-6 py-10">
+    <div className="min-h-screen font-inter px-6 py-10">
       <div className="max-w-6xl mx-auto">
         <h1 className="text-2xl font-semibold text-gray-900 mb-1">Blind 75</h1>
         <p className="text-sm text-gray-500 mb-8">{questions.length} questions</p>

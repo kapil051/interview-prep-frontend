@@ -5,7 +5,7 @@ function LoginPage() {
   const { email, setEmail, password, setPassword, error, loading, handleSubmit } = useLogin();
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 font-inter">
+    <div className="min-h-screen flex items-center justify-center font-inter">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
         <h1 className="text-2xl font-semibold text-gray-900 mb-1">Welcome back</h1>
         <p className="text-sm text-gray-500 mb-6">Sign in to your account</p>
