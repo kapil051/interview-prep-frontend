@@ -151,10 +151,9 @@ function DashboardPage() {
               Start Practicing
             </button>
             <button
-              onClick={() => navigate('/register')}
               className="px-6 py-2.5 bg-white hover:bg-purple-50 text-purple-700 text-sm font-semibold rounded-lg border border-purple-300 transition-colors"
             >
-              Sign Up Free
+              Explore Topics
             </button>
           </div>
 
