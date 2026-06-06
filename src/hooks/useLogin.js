@@ -15,7 +15,7 @@ function useLogin() {
     setLoading(true);
     try {
       const res = await login(email, password);
-      const { token, email: userEmail, fullName, role } = res.data;
+      const { token, email: userEmail, fullName, role } = res.data.data;
       localStorage.setItem('token', token);
       localStorage.setItem('email', userEmail);
       localStorage.setItem('fullName', fullName);

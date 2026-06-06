@@ -1,19 +1,23 @@
 import { useState, useEffect } from 'react';
-import { getAllQuestions } from '../services/blind75Service';
+import { getAllQuestions, getStatuses } from '../services/blind75Service';
 
 function useBlind75() {
   const [questions, setQuestions] = useState([]);
+  const [statuses, setStatuses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    getAllQuestions()
-      .then((res) => setQuestions(res.data))
+    Promise.all([getAllQuestions(), getStatuses()])
+      .then(([questionsRes, statusesRes]) => {
+        setQuestions(questionsRes.data.data);
+        setStatuses(statusesRes.data.data);
+      })
       .catch((err) => setError(err.response?.data?.message || 'Failed to load questions.'))
       .finally(() => setLoading(false));
   }, []);
 
-  return { questions, loading, error };
+  return { questions, statuses, loading, error };
 }
 
 export default useBlind75;
