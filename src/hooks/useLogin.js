@@ -20,7 +20,7 @@ function useLogin() {
       localStorage.setItem('email', userEmail);
       localStorage.setItem('fullName', fullName);
       localStorage.setItem('role', role);
-      navigate('/dashboard');
+      navigate('/');
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed. Please try again.');
     } finally {
