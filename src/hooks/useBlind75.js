@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getAllQuestions, getStatuses } from '../services/blind75Service';
+import { getAllQuestions, getStatuses, updateProgress } from '../services/blind75Service';
 
 function useBlind75() {
   const [questions, setQuestions] = useState([]);
@@ -17,7 +17,17 @@ function useBlind75() {
       .finally(() => setLoading(false));
   }, []);
 
-  return { questions, statuses, loading, error };
+  const handleProgressUpdate = (questionId, status) => {
+    updateProgress(questionId, status)
+      .then(() => {
+        setQuestions((prev) =>
+          prev.map((q) => (q.id === questionId ? { ...q, status } : q))
+        );
+      })
+      .catch((err) => setError(err.response?.data?.message || 'Failed to update progress.'));
+  };
+
+  return { questions, statuses, loading, error, handleProgressUpdate };
 }
 
 export default useBlind75;

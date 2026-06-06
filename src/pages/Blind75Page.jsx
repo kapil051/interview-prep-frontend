@@ -13,19 +13,22 @@ const STATUS_STYLES = {
   TODO: 'bg-blue-100 text-blue-700',
 };
 
-function QuestionCard({ question }) {
+const SELECTABLE_STATUSES = ['SOLVED', 'ATTEMPTED', 'TODO'];
+
+function QuestionCard({ question, statuses, onProgressUpdate }) {
   const {
     title,
     difficulty,
     topic,
     pattern,
     practiceLink,
-    videoLink,
+    videoSolutionLink,
     videoAvailability,
     status,
   } = question;
 
   const isVideoComingSoon = videoAvailability === 'COMING_SOON';
+  const selectableOptions = statuses?.length ? statuses : SELECTABLE_STATUSES;
 
   return (
     <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm flex flex-col gap-4">
@@ -60,7 +63,7 @@ function QuestionCard({ question }) {
             Practice
           </a>
           <a
-            href={!isVideoComingSoon ? videoLink : undefined}
+            href={!isVideoComingSoon ? videoSolutionLink : undefined}
             target="_blank"
             rel="noopener noreferrer"
             aria-disabled={isVideoComingSoon}
@@ -74,16 +77,27 @@ function QuestionCard({ question }) {
           </a>
         </div>
 
-        <span className={`self-start text-xs font-medium px-2 py-0.5 rounded-full ${STATUS_STYLES[status] ?? 'bg-gray-100 text-gray-600'}`}>
-          {status?.replace('_', ' ')}
-        </span>
+        <select
+          value={status ?? 'NOT_STARTED'}
+          onChange={(e) => onProgressUpdate(question.id, e.target.value)}
+          className={`self-start text-xs font-medium px-2 py-0.5 rounded-full border-0 cursor-pointer appearance-none focus:outline-none focus:ring-2 focus:ring-primary-300 ${STATUS_STYLES[status] ?? 'bg-gray-100 text-gray-600'}`}
+        >
+          {status === 'NOT_STARTED' || !status ? (
+            <option value="NOT_STARTED">NOT STARTED</option>
+          ) : null}
+          {selectableOptions.map((s) => (
+            <option key={s} value={s}>
+              {s.replace('_', ' ')}
+            </option>
+          ))}
+        </select>
       </div>
     </div>
   );
 }
 
 function Blind75Page() {
-  const { questions, loading, error } = useBlind75();
+  const { questions, statuses, loading, error, handleProgressUpdate } = useBlind75();
 
   if (loading) {
     return (
@@ -109,7 +123,12 @@ function Blind75Page() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {questions.map((q) => (
-            <QuestionCard key={q.id ?? q._id} question={q} />
+            <QuestionCard
+              key={q.id ?? q._id}
+              question={q}
+              statuses={statuses}
+              onProgressUpdate={handleProgressUpdate}
+            />
           ))}
         </div>
       </div>
