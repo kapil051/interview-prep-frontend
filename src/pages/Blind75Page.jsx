@@ -61,11 +61,11 @@ function QuestionRow({ index, question, statuses, onProgressUpdate }) {
       </td>
 
       {/* Status */}
-      <td className="px-4 py-3">
+      <td className="px-4 py-3 text-center">
         <select
           value={status ?? 'NOT_STARTED'}
           onChange={(e) => onProgressUpdate(question.id, e.target.value)}
-          className={`text-xs font-medium px-2.5 py-1 rounded-full border-0 cursor-pointer appearance-none focus:outline-none focus:ring-2 focus:ring-purple-300 ${STATUS_STYLES[status] ?? 'bg-gray-100 text-gray-600'}`}
+          className={`text-xs font-medium px-2.5 py-1 rounded-full border-0 outline-none cursor-pointer focus:ring-2 focus:ring-purple-300 ${STATUS_STYLES[status] ?? 'bg-gray-100 text-gray-600'}`}
         >
           {(status === 'NOT_STARTED' || !status) && (
             <option value="NOT_STARTED">NOT STARTED</option>
