@@ -1,21 +1,21 @@
 import useBlind75 from '../hooks/useBlind75';
 
 const DIFFICULTY_STYLES = {
-  EASY: 'bg-green-100 text-green-700',
+  EASY:   'bg-green-100 text-green-700',
   MEDIUM: 'bg-yellow-100 text-yellow-700',
-  HARD: 'bg-red-100 text-red-700',
+  HARD:   'bg-red-100 text-red-700',
 };
 
 const STATUS_STYLES = {
   NOT_STARTED: 'bg-gray-100 text-gray-600',
-  SOLVED: 'bg-green-100 text-green-700',
-  ATTEMPTED: 'bg-yellow-100 text-yellow-700',
-  TODO: 'bg-blue-100 text-blue-700',
+  SOLVED:      'bg-green-100 text-green-700',
+  ATTEMPTED:   'bg-yellow-100 text-yellow-700',
+  TODO:        'bg-blue-100 text-blue-700',
 };
 
 const SELECTABLE_STATUSES = ['SOLVED', 'ATTEMPTED', 'TODO'];
 
-function QuestionCard({ question, statuses, onProgressUpdate }) {
+function QuestionRow({ index, question, statuses, onProgressUpdate }) {
   const {
     title,
     difficulty,
@@ -27,72 +27,82 @@ function QuestionCard({ question, statuses, onProgressUpdate }) {
     status,
   } = question;
 
-  const isVideoComingSoon = videoAvailability === 'COMING_SOON';
+  const isVideoAvailable = videoAvailability === 'AVAILABLE';
   const selectableOptions = statuses?.length ? statuses : SELECTABLE_STATUSES;
+  const rowBg = index % 2 === 0 ? 'bg-white' : 'bg-purple-50/40';
 
   return (
-    <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm flex flex-col gap-4">
-      <div className="flex items-start justify-between gap-2">
-        <h3 className="text-sm font-semibold text-gray-900 leading-snug">{title}</h3>
-        <span className={`shrink-0 text-xs font-medium px-2 py-0.5 rounded-full ${DIFFICULTY_STYLES[difficulty] ?? 'bg-gray-100 text-gray-600'}`}>
+    <tr className={`${rowBg} hover:bg-purple-50 transition-colors`}>
+      {/* # */}
+      <td className="px-4 py-3 text-xs text-gray-400 font-mono w-10 text-center">
+        {index + 1}
+      </td>
+
+      {/* Title */}
+      <td className="px-4 py-3 text-sm font-medium text-gray-900 max-w-xs">
+        {title}
+      </td>
+
+      {/* Difficulty */}
+      <td className="px-4 py-3">
+        <span className={`text-xs font-semibold px-2.5 py-0.5 rounded-full ${DIFFICULTY_STYLES[difficulty] ?? 'bg-gray-100 text-gray-600'}`}>
           {difficulty}
         </span>
-      </div>
+      </td>
 
-      <div className="flex flex-wrap gap-1.5">
-        {topic && (
-          <span className="text-xs font-medium bg-primary-100 text-primary-700 px-2 py-0.5 rounded-full">
-            {topic}
-          </span>
-        )}
-        {pattern && (
-          <span className="text-xs font-medium bg-primary-100 text-primary-700 px-2 py-0.5 rounded-full">
-            {pattern}
-          </span>
-        )}
-      </div>
+      {/* Topic */}
+      <td className="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">
+        {topic ?? '—'}
+      </td>
 
-      <div className="mt-auto flex flex-col gap-2">
-        <div className="flex gap-2">
-          <a
-            href={practiceLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex-1 text-center py-1.5 text-xs font-medium bg-primary-600 hover:bg-primary-700 text-white rounded-lg transition"
-          >
-            Practice
-          </a>
-          <a
-            href={!isVideoComingSoon ? videoSolutionLink : undefined}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-disabled={isVideoComingSoon}
-            className={`flex-1 text-center py-1.5 text-xs font-medium rounded-lg transition border ${
-              isVideoComingSoon
-                ? 'border-gray-200 text-gray-400 cursor-not-allowed pointer-events-none'
-                : 'border-primary-600 text-primary-600 hover:bg-primary-50'
-            }`}
-          >
-            {isVideoComingSoon ? 'Video Soon' : 'Video'}
-          </a>
-        </div>
+      {/* Pattern */}
+      <td className="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">
+        {pattern ?? '—'}
+      </td>
 
+      {/* Status */}
+      <td className="px-4 py-3">
         <select
           value={status ?? 'NOT_STARTED'}
           onChange={(e) => onProgressUpdate(question.id, e.target.value)}
-          className={`self-start text-xs font-medium px-2 py-0.5 rounded-full border-0 cursor-pointer appearance-none focus:outline-none focus:ring-2 focus:ring-primary-300 ${STATUS_STYLES[status] ?? 'bg-gray-100 text-gray-600'}`}
+          className={`text-xs font-medium px-2.5 py-1 rounded-full border-0 cursor-pointer appearance-none focus:outline-none focus:ring-2 focus:ring-purple-300 ${STATUS_STYLES[status] ?? 'bg-gray-100 text-gray-600'}`}
         >
-          {status === 'NOT_STARTED' || !status ? (
+          {(status === 'NOT_STARTED' || !status) && (
             <option value="NOT_STARTED">NOT STARTED</option>
-          ) : null}
+          )}
           {selectableOptions.map((s) => (
-            <option key={s} value={s}>
-              {s.replace('_', ' ')}
-            </option>
+            <option key={s} value={s}>{s.replace('_', ' ')}</option>
           ))}
         </select>
-      </div>
-    </div>
+      </td>
+
+      {/* Practice */}
+      <td className="px-4 py-3">
+        <a
+          href={practiceLink}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-xs font-medium px-3 py-1.5 bg-purple-700 hover:bg-purple-800 text-white rounded-md transition-colors whitespace-nowrap"
+        >
+          Practice
+        </a>
+      </td>
+
+      {/* Video */}
+      <td className="px-4 py-3">
+        {isVideoAvailable ? (
+          <button
+            onClick={() => window.open(videoSolutionLink, '_blank', 'noopener,noreferrer')}
+            className="w-7 h-7 flex items-center justify-center bg-purple-700 hover:bg-purple-800 text-white rounded-full transition-colors"
+            aria-label="Watch video solution"
+          >
+            ▶
+          </button>
+        ) : (
+          <span className="text-xs text-gray-400">Soon</span>
+        )}
+      </td>
+    </tr>
   );
 }
 
@@ -101,35 +111,75 @@ function Blind75Page() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center font-inter">
-        <div className="w-8 h-8 border-4 border-primary-200 border-t-primary-600 rounded-full animate-spin" />
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="w-8 h-8 border-4 border-purple-200 border-t-purple-700 rounded-full animate-spin" />
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center font-inter">
+      <div className="min-h-screen flex items-center justify-center">
         <p className="text-sm text-red-500">{error}</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen font-inter px-6 py-10">
-      <div className="max-w-6xl mx-auto">
-        <h1 className="text-2xl font-semibold text-gray-900 mb-1">Blind 75</h1>
-        <p className="text-sm text-gray-500 mb-8">{questions.length} questions</p>
+    <div className="min-h-screen font-['Inter',sans-serif] px-6 py-10">
+      <div className="max-w-7xl mx-auto">
+        <h1 className="text-2xl font-bold text-gray-900 mb-1">Blind 75</h1>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {questions.map((q) => (
-            <QuestionCard
-              key={q.id ?? q._id}
-              question={q}
-              statuses={statuses}
-              onProgressUpdate={handleProgressUpdate}
-            />
-          ))}
+        {(() => {
+          const solvedCount = questions.filter(q => q.status === 'SOLVED').length;
+          const total = questions.length || 75;
+          const pct = Math.round((solvedCount / total) * 100);
+          return (
+            <div className="mb-6">
+              <p className="text-sm text-gray-500 mb-3">
+                <span className="font-semibold text-purple-700">{solvedCount}</span> / {total} questions solved
+              </p>
+              <div className="flex items-center gap-3">
+                <div className="flex-1 h-2.5 bg-purple-100 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-purple-700 rounded-full transition-all duration-500"
+                    style={{ width: `${pct}%` }}
+                  />
+                </div>
+                <span className="text-xs font-semibold text-purple-700 w-10 text-right">{pct}%</span>
+              </div>
+            </div>
+          );
+        })()}
+
+        <div className="rounded-xl border border-purple-100 overflow-hidden shadow-sm">
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse text-left">
+              <thead>
+                <tr className="bg-gradient-to-r from-purple-900 via-purple-800 to-violet-900 sticky top-0 z-10">
+                  {['#', 'Title', 'Difficulty', 'Topic', 'Pattern', 'Status', 'Practice', 'Video'].map((col) => (
+                    <th
+                      key={col}
+                      className="px-4 py-3 text-xs font-semibold text-purple-200 uppercase tracking-wider whitespace-nowrap"
+                    >
+                      {col}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {questions.map((q, i) => (
+                  <QuestionRow
+                    key={q.id ?? q._id}
+                    index={i}
+                    question={q}
+                    statuses={statuses}
+                    onProgressUpdate={handleProgressUpdate}
+                  />
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
